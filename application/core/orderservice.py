@@ -174,19 +174,21 @@ def confirm_order(user_id: int, user_name, total_amount: float):
     userservice.clear_user_cart(user_id)
     db.session.commit()
 
-    msg = """user_name: {}\nshipping_method: {}\npayment_method: {}\naddress: {}\nphone_number: {}\nconfirmed: {}\n
-        delivery_price: {}\ntotal_amount: {}\ndistance: {}\n\n""".format(
+    msg = """user_name: {}\nshipping_method: {}\npayment_method: {}\naddress: {}\nphone_number: {}\nconfirmed: {}\ndelivery_price: {}\ntotal_amount: {}\ndistance: {}\n\n""".format(
             current_order.user_name, current_order.shipping_method, current_order.payment_method, current_order.address_txt,
             current_order.phone_number, current_order.confirmed, current_order.delivery_price, current_order.total_amount, current_order.distance
         )
     msg += 'Содержимое заказа:\n'
+    n = 1
     for order in current_order.order_items.all():
-        msg += '{})\nНазвание: {}\nКоличество: {}\nЦена: {}'.format(order.dish.name, order.count, order.dish.price * order.count)
+        msg += '{})\nНазвание: {}\nКоличество: {}\nЦена: {}'.format(n, order.dish.name, order.count, order.dish.price * order.count)
         msg += '\n\n'
-    try:
-        telegram_bot.send_message(chat_id=Config.GROUP, text=msg)
-    except:
-        n = 0
+        n += 1
+    # try:
+
+    telegram_bot.send_message(chat_id=int(Config.GROUP), text=msg)
+    # except:
+    #     n = 0
     return current_order
 
 
