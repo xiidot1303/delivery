@@ -267,10 +267,6 @@ def confirmation_processor(message: Message, **kwargs):
         order_success_message = strings.get_string('order.success', language)
         back_to_the_catalog(chat_id, language, order_success_message)
         notify_new_order(order, total)
-
-
-
-
     elif strings.get_string('order.cancel', language) in message.text:
         order_canceled_message = strings.get_string('order.canceled', language)
         if 'message_id' in kwargs:

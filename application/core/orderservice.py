@@ -180,7 +180,7 @@ def confirm_order(user_id: int, user_name, total_amount: float):
             current_order.phone_number, current_order.confirmed, current_order.delivery_price, current_order.total_amount, current_order.distance
         )
     msg += 'Содержимое заказа:\n'
-    for order in order.order_items.all():
+    for order in current_order.order_items.all():
         msg += '{})\nНазвание: {}\nКоличество: {}\nЦена: {}'.format(order.dish.name, order.count, order.dish.price * order.count)
         msg += '\n\n'
     try:
