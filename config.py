@@ -20,3 +20,5 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
     PAYMENT_PROVIDER_TOKEN = os.getenv('PAYMENT_PROVIDER_TOKEN')
     PAYMENT_PROVIDER_TOKEN_CLICK = os.getenv('PAYMENT_PROVIDER_TOKEN_CLICK')
+    GROUP = os.environ.get('GROUP')
+    PRODUCTION = os.environ.get('PRODUCTION')
