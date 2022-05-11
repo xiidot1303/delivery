@@ -174,8 +174,8 @@ def confirm_order(user_id: int, user_name, total_amount: float):
     userservice.clear_user_cart(user_id)
     db.session.commit()
 
-    msg = """user_name: {}\nshipping_method: {}\npayment_method: {}\naddress: {}\nphone_number: {}\nconfirmed: {}\ndelivery_price: {}\ntotal_amount: {}\ndistance: {}\n\n""".format(
-            current_order.user_name, current_order.shipping_method, current_order.payment_method, current_order.address_txt,
+    msg = """user_name: {}\nshipping_method: {}\npayment_method: {}\naddress: {}\nlocation: {}\nphone_number: {}\nconfirmed: {}\ndelivery_price: {}\ntotal_amount: {}\ndistance: {}\n\n""".format(
+            current_order.user_name, current_order.shipping_method, current_order.payment_method, current_order.address_txt, current_order.location,
             current_order.phone_number, current_order.confirmed, current_order.delivery_price, current_order.total_amount, current_order.distance
         )
     msg += 'Содержимое заказа:\n'
