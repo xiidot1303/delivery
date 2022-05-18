@@ -25,9 +25,9 @@ if 'PRODUCTION' in os.environ:
         else:
             abort(400)
 
-    # telegram_bot.polling()
-    telegram_bot.remove_webhook()
-    telegram_bot.set_webhook(Config.WEBHOOK_URL_BASE + Config.WEBHOOK_URL_PATH)
+    telegram_bot.polling()
+    # telegram_bot.remove_webhook()
+    # telegram_bot.set_webhook(Config.WEBHOOK_URL_BASE + Config.WEBHOOK_URL_PATH)
 
 
 def check_contacts(message: telebot.types.Message):
