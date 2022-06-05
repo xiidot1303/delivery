@@ -10,30 +10,32 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/solid.css" integrity="sha384-ioUrHig76ITq4aEJ67dHzTvqjsAP/7IzgwE7lgJcg2r7BRNGYSK0LwSmROzYtgzs" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/fontawesome.css" integrity="sha384-sri+NftO+0hcisDKgr287Y/1LVnInHJ1l+XC7+FOabmTTIK0HnE2ID+xxvJ21c5J" crossorigin="anonymous">
     {% block styles %}{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/black.css') }}">
     <!-- AdminLTE styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/AdminLTE.min.css') }}">
     <!-- AdminLTE skin styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/skin-blue-light.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/skin-black-dark.min.css') }}">
     <!-- Custom styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     <!-- Google Font -->
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/black.css') }}">
     <title>{% if title %} {{ title }} {% else %} Административная панель {% endif %} | Urgutini Delivery</title>
 </head>
-<body class="hold-transition skin-blue-light sidebar-mini">
+<body class="hold-transition skin-blue-light sidebar-mini" style="background-color: black;">
     <div class="wrapper">
         <!-- Main Header -->
         <header class="main-header">
             <!-- Logo -->
-            <a href="{{ url_for('admin.index') }}" class="logo">
+            <a href="{{ url_for('admin.index') }}" class="logo" style="background-color: #FF6600;">
                 <!-- Logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>Urgutini Delivery</b></span>
+                <span class="logo-mini" style="background-color: #FF6600;"><b>Urgutini Delivery</b></span>
                 <!-- Logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>Urgutini Delivery</b></span>
+                <span class="logo-lg" style="background-color: #FF6600;"><b>Urgutini Delivery</b></span>
             </a>
             <!-- Header Navbar -->
-            <nav class="navbar navbar-static-top" role="navigation">
+            <nav class="navbar navbar-static-top" style="background-color: #FF6600;" role="navigation">
                 <!-- Sidebar toggle button -->
                 <a href="#" class="sidebar-toggle fas fa-bars" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
@@ -48,12 +50,12 @@
                 </div>
             </nav>
         </header>
-        <aside class="main-sidebar">
+        <aside class="main-sidebar" style="background-color: black;">
             <section class="sidebar">
                 <!-- /.search form -->
                 <!-- Sidebar menu -->
                 <ul class="sidebar-menu">
-                    <li class="header">НАВИГАЦИЯ</li>
+                    <li class="header" style="background-color: black;">НАВИГАЦИЯ</li>
                     <li class="{% if area == 'catalog' %}active{% endif %}"><a href="{{ url_for('admin.catalog') }}"><i class="fa fas fa-stream"></i> <span>Каталог</span></a></li>
                     <li class="{% if area == 'orders' %}active{% endif %}"><a href="{{ url_for('admin.orders') }}"><i class="fa fas fa-clipboard-list"></i> <span>Заказы</span></a></li>
                     <li class="{% if area == 'users' %}active{% endif %}"><a href="{{ url_for('admin.users') }}"><i class="fa fas fa-users"></i> <span>Клиенты</span></a></li>
@@ -67,7 +69,7 @@
             </section>
         </aside>
         <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" style="background-color: black;">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h3>
@@ -81,7 +83,7 @@
       </ol>
     </section>
     <!-- Main content -->
-    <section class="content container-fluid">
+    <section class="content container-fluid" style="background-color: black;">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="alerts-wrapper">
@@ -89,7 +91,7 @@
                         {% set is_error = category == 'error' %}
                         {% set is_warning = category == 'warning' %}
                         {% set is_success = category == 'success' %}
-                        <div class="alert alert-{% if is_error %}danger{% elif is_warning %}warning{% elif is_success %}success{% else %}info{% endif %} alert-dismissible">
+                        <div style="background-color: black;" class="alert alert-{% if is_error %}danger{% elif is_warning %}warning{% elif is_success %}success{% else %}info{% endif %} alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <h4><i class="icon fas fa-{% if is_error %}ban{% elif is_warning %}exclamation-triangle{% elif is_success %}check{% else %}info{% endif %}"></i> Сообщение!</h4>
                             {{ message }}
@@ -106,13 +108,13 @@
   <!-- /.content-wrapper -->
 
   <!-- Main Footer -->
-  <footer class="main-footer">
+  <footer class="main-footer" style="background-color: black;">
     <!-- To the right -->
-    <div class="pull-right hidden-xs">
+    <div class="pull-right hidden-xs" style="color: #fff;">
       Административная панель
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; {{ year }}</strong> <small>Все права защищены.</small>
+    <strong  style="color: #fff;">Copyright &copy; {{ year }}</strong> <small  style="color: #fff;">Все права защищены.</small>
   </footer>
     </div>
 

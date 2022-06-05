@@ -1,0 +1,13 @@
+.box, .info-box {
+    background-color: black;
+}
+
+
+.content-wrapper, .container-fluid, .main-sidebar {
+    background-color: black;
+
+}
+
+.sidebar-toggle:hover {
+    background-color: #FF6600;
+}
