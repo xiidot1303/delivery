@@ -142,7 +142,10 @@ def from_dish_categories(dish_categories, language: str) -> ReplyKeyboardMarkup:
         names = [category.name_uz for category in dish_categories]
     else:
         names = [category.name for category in dish_categories]
-    categories_keyboard.add(*names)
+    # categories_keyboard.add(*names)
+    for name in names:
+        categories_keyboard.add(name)
+
     categories_keyboard.add(get_string('catalog.cart', language), get_string('go_back', language))
     return categories_keyboard
 
