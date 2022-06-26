@@ -66,7 +66,8 @@ def count_callback_query(call):
     bot.send_message(chat_id, catalog_message, parse_mode='HTML')
 
 
-def dish_action_processor(message: Message, **kwargs):
+def dish_action_processor(message: Message, **kwargs): # choosing amount of product, in there only buttons.
+    print("iwiufiuwgfiuewgfiugewiufewiuvfewiuvciuvciuewv")
     chat_id = message.chat.id
     user_id = message.from_user.id
     language = userservice.get_user_language(user_id)
