@@ -180,6 +180,7 @@ class Order(db.Model):
                                   backref='order', cascade='all, delete-orphan')
     location = db.relationship('Location', uselist=False, cascade='all,delete', backref='order')
     distance = db.Column(db.String(15))
+    status = db.Column(db.String(10), default='0')
 
     def fill_from_user_cart(self, cart):
         """
