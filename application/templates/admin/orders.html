@@ -29,7 +29,11 @@
                         </thead>
                         <tbody>
                             {% for order in orders %}
+                                {% if order.status == '1' %}
+                                <tr style="background-color: rgba(0, 193, 0, 0.637);">
+                                {% else %}
                                 <tr>
+                                {% endif %}
                                     <td>{{ loop.revindex }}</td>
                                     <td>{{ order.confirmation_date|datetime(convert_from_utc=True) }}</td>
                                     <td>{{ order.phone_number }}</td>
@@ -67,6 +71,19 @@
                                            class="btn btn-flat btn-info" data-toggle="tooltip" data-placement="top" title="Посмотреть">
                                             <i class="fas fa-eye"></i>
                                         </a>
+
+                                        {% if order.status == '1' %}
+                                        <a href="{{ url_for('admin.order_change_status', status='0', order_id=order.id) }}"
+                                           class="btn btn-flat btn-danger" data-toggle="tooltip" data-placement="top" title="Отменить">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                        {% else %}
+                                        <a href="{{ url_for('admin.order_change_status', status='1', order_id=order.id) }}"
+                                           class="btn btn-flat btn-success" data-toggle="tooltip" data-placement="top" title="Подтвердить">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        {% endif %}
+
                                     </td>
                                 </tr>
                             {% endfor %}

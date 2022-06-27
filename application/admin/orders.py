@@ -1,6 +1,7 @@
 from application.admin import bp
+from application import db
 from application.core import orderservice
-from flask import render_template
+from flask import render_template, redirect, url_for
 from flask_login import login_required
 from application.utils import date
 
@@ -16,6 +17,15 @@ def _total_order_sum(order_items) -> int:
 def orders():
     all_orders = orderservice.get_all_confirmed_orders()
     return render_template('admin/orders.html', title='Заказы', area='orders', orders=all_orders)
+
+
+@bp.route('/order_change_status/<int:status>/<int:order_id>')
+@login_required
+def order_change_status(status: int, order_id: int):
+    current_order = orderservice.get_order_by_id(order_id)
+    current_order.status = str(status)
+    db.session.commit()
+    return redirect(url_for('admin.orders'))
 
 
 @bp.route('/orders/<int:order_id>')
