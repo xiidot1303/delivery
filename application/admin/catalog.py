@@ -112,8 +112,9 @@ def create_dish():
         image = form.image.data
         price = form.price.data
         category_id = form.category.data
+        measure = form.measure.data
         new_dish = dishservice.create_dish(name=name, name_uz=name_uz, description=description, description_uz=description_uz,
-                                           image=image, price=price, category_id=category_id, show_usd=show_usd)
+                                           image=image, price=price, category_id=category_id, show_usd=show_usd, measure=measure)
         flash('Блюдо {} успешно добавлено в категорию {}'.format(
             name, new_dish.category.name
         ), category='success')
@@ -136,8 +137,9 @@ def dish(dish_id: int):
         price = form.price.data
         category_id = form.category.data
         show_usd = form.show_usd.data
+        measure = form.measure.data
         dishservice.update_dish(dish_id, name_ru, name_uz, description_ru, description_uz, image, price,
-                                category_id, show_usd)
+                                category_id, show_usd, measure)
         flash('Блюдо {} изменено'.format(name_ru, category='success'))
         return redirect(url_for('admin.catalog'))
     dish = dishservice.get_dish_by_id(dish_id)

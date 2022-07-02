@@ -151,6 +151,7 @@ class Dish(db.Model):
     price = db.Column(db.Float)
     number = db.Column(db.Integer, default=1)
     category_id = db.Column(db.Integer, db.ForeignKey('dish_categories.id'))
+    measure = db.Column(db.String(100), default='штук')
 
     def get_full_name(self):
         return self.category.get_nested_names() + ' |=>| ' + self.name

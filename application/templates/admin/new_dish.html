@@ -67,6 +67,15 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group {% if form.measure.errors|length > 0 %}has-error{% endif %}">
+                                    {{ form.measure.label }}
+                                    {{ form.measure(class='form-control') }}
+                                    {% for error in form.measure.errors %}
+                                        <span class="help-block">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 col-sm-12">

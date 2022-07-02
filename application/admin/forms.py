@@ -1,4 +1,4 @@
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, Form
 from wtforms import StringField, SubmitField, TextAreaField, FileField, SelectField, BooleanField, \
     PasswordField, FloatField
 from wtforms.validators import DataRequired, ValidationError, EqualTo
@@ -31,6 +31,11 @@ class DishForm(FlaskForm):
     description_uz = TextAreaField('Описание товара на узбекском')
     category = SelectField('Категория', validators=[DataRequired('Укажите категорию')], coerce=int)
     price = StringField('Цена', validators=[DataRequired('Укажите цену')])
+    measure = SelectField(
+        'Измерение', validators=[DataRequired('Укажите мера')],
+        choices=[('p', 'штук'), ('m', 'метр')]
+        )
+    # measure = StringField('Измерение', validators=[DataRequired('Укажите мера')])
     image = FileField('Изображение',
                       validators=[FileAllowed(['png', 'jpg'],
                                               message='Разрешены только изображения форматов .jpg, .png')])
@@ -44,6 +49,7 @@ class DishForm(FlaskForm):
         self.description_ru.data = dish.description
         self.category.data = dish.category_id
         self.price.data = dish.price
+        self.measure.data = dish.measure
         self.show_usd.data = dish.show_usd
 
     def validate_price(self, field):

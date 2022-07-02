@@ -62,9 +62,9 @@ def remove_category(category_id: int):
     db.session.commit()
 
 
-def create_dish(name, name_uz, description, description_uz, image, price, category_id, show_usd=False):
+def create_dish(name, name_uz, description, description_uz, image, price, category_id, measure, show_usd=False):
     dish = Dish(name=name, name_uz=name_uz, description=description, description_uz=description_uz,
-                price=price, category_id=category_id, show_usd=show_usd)
+                price=price, category_id=category_id, show_usd=show_usd, measure=measure)
     if type(image) is str and image != '':
         file_path = os.path.join(Config.UPLOAD_DIRECTORY, image)
         dish.image_path = file_path
@@ -77,7 +77,7 @@ def create_dish(name, name_uz, description, description_uz, image, price, catego
     return dish
 
 
-def update_dish(dish_id, name, name_uz,  description, description_uz, image, price, category_id, show_usd):
+def update_dish(dish_id, name, name_uz,  description, description_uz, image, price, category_id, show_usd, measure):
     dish = get_dish_by_id(dish_id)
     dish.name = name
     dish.name_uz = name_uz
@@ -86,6 +86,7 @@ def update_dish(dish_id, name, name_uz,  description, description_uz, image, pri
     dish.price = price
     dish.show_usd = show_usd
     dish.category_id = category_id
+    dish.measure = measure
     if image and image.filename != '':
         if dish.image_path:
             files.remove_file(dish.image_path)

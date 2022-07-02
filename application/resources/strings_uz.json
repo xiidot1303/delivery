@@ -103,5 +103,8 @@
     "search.input": "Введите критерий поиска",
     "search.results": "Результаты поиска",
     "search.to_cart": "Перейти в корзину",
-    "search.error": "Введите как минимум 2 буквы для поиска"
+    "search.error": "Введите как минимум 2 буквы для поиска",
+    "dish.by_meter": "Метр буйича",
+    "dish.how_many_meters": "Нечи метр сотиб олмокчисиз?",
+    "dish.type_amount": "Qancha miqdorda sotib olmoqchisiz?"
 }

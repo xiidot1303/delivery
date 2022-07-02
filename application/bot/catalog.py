@@ -82,6 +82,28 @@ def dish_action_processor(message: Message, **kwargs): # choosing amount of prod
 
     elif strings.get_string('catalog.cart', language) in message.text:
         user_cart.cart_processor(message, dish_action_processor)
+    
+    elif message.text.isdigit():
+        # get count of products
+        def _total_cart_sum(cart) -> int:
+            summary_dishes_sum = [cart_item.dish.price * cart_item.count
+                                  for cart_item in cart]
+            total = sum(summary_dishes_sum)
+            return total
+
+        language = userservice.get_user_language(user_id)
+
+        selected_number = int(message.text)
+        current_dish = userservice.get_current_user_dish(user_id)
+        userservice.add_dish_to_cart(user_id, current_dish, selected_number)
+        cart = userservice.get_user_cart(user_id)
+        total = _total_cart_sum(cart)
+        # bot.delete_message(chat_id, call.message.message_id)
+        cart_contains_message = strings.from_cart_items(cart, language, total)
+        continue_message = strings.get_string('catalog.continue', language).format(cart_contains_message)
+        back_to_the_catalog(chat_id, language, continue_message)
+        catalog_message = strings.get_string('catalog.start', language)
+        bot.send_message(chat_id, catalog_message, parse_mode='HTML')
 
     else:
         choose_dish_processor(message, category=current_dish.category)
@@ -122,7 +144,7 @@ def choose_dish_processor(message: Message, **kwargs):
             error()
             return
         userservice.set_current_user_dish(user_id, dish.id)
-        dish_keyboard = keyboards.get_keyboard('catalog.dish_keyboard', language)
+        dish_keyboard = keyboards.get_keyboard('catalog.dish_keyboard', language) # unnecassary
         dish_info = strings.from_dish(dish, language)
         msg_id = None
         if dish.image_id or dish.image_path:
@@ -130,15 +152,15 @@ def choose_dish_processor(message: Message, **kwargs):
                 try:
                     image = open(dish.image_path, 'rb')
                 except FileNotFoundError:
-                    bot.send_message(chat_id, dish_info, reply_markup=dish_keyboard, parse_mode='HTML')
+                    bot.send_message(chat_id, dish_info, parse_mode='HTML')
                 else:
-                    sent_message = bot.send_photo(chat_id, image, caption=dish_info, reply_markup=dish_keyboard, parse_mode='HTML')
+                    sent_message = bot.send_photo(chat_id, image, caption=dish_info, parse_mode='HTML')
                     dishservice.set_dish_image_id(dish, sent_message.photo[-1].file_id)
                     msg_id = sent_message.message_id
             elif dish.image_id:
-                msg_id = bot.send_photo(chat_id, dish.image_id, caption=dish_info, reply_markup=dish_keyboard, parse_mode='HTML').message_id
+                msg_id = bot.send_photo(chat_id, dish.image_id, caption=dish_info, parse_mode='HTML').message_id
         else:
-            msg_id = bot.send_message(chat_id, dish_info, reply_markup=dish_keyboard, parse_mode='HTML').message_id
+            msg_id = bot.send_message(chat_id, dish_info, parse_mode='HTML').message_id
         bot.register_next_step_handler_by_chat_id(chat_id, dish_action_processor, message_id=msg_id)
 
 

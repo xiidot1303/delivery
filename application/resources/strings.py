@@ -79,8 +79,17 @@ def from_dish(dish: Dish, language: str) -> str:
     if dish.show_usd:
         price = dish.price
         price_currency = 'usd'
-    dish_content += "{}: {} {}".format(get_string('dish.price', language),
-                                       _format_number(price), get_string(price_currency, language))
+    if dish.measure == 'm': # meter
+        ask_amount = get_string('dish.how_many_meters', language)
+        measure = '(метр)'
+    elif dish.measure == 'p': # peace
+        ask_amount = get_string('dish.type_amount', language)
+        measure = ''
+
+    dish_content += "{}: {} {}  {}".format(get_string('dish.price', language),
+                                       _format_number(price), get_string(price_currency, language), measure)
+    
+    dish_content += "\n\n{}".format(ask_amount)
     return dish_content
 
 
