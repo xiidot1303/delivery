@@ -166,7 +166,7 @@ class Order(db.Model):
     """
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(BIGINT, db.ForeignKey('users.id'))
     user_name = db.Column(db.String(100))
     shipping_method = db.Column(db.String(50))
     payment_method = db.Column(db.String(50))
@@ -226,7 +226,7 @@ class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(100))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
+    user_id = db.Column(BIGINT, db.ForeignKey('users.id', ondelete='SET NULL'))
     username = db.Column(db.String(100))
 
 
@@ -234,7 +234,7 @@ class UserDish(db.Model):
     """
     Model for saving current dish of user
     """
-    user_id = db.Column(db.Integer, index=True, primary_key=True)
+    user_id = db.Column(BIGINT, index=True, primary_key=True)
     dish_id = db.Column(db.Integer, index=True)
 
 
@@ -248,7 +248,7 @@ class NotificationChat(db.Model):
 class RegistrationRequest(db.Model):
     __tablename__ = "registration_requests"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(BIGINT)
     phone_number = db.Column(db.String(20))
     tg_username = db.Column(db.String(100))
     username = db.Column(db.String(100))
