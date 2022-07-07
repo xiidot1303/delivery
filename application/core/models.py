@@ -11,7 +11,7 @@ class CartItem(db.Model):
     """
     __tablename__ = 'cart_items'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(BIGINT, db.ForeignKey('users.id'))
     dish_id = db.Column(db.Integer, db.ForeignKey('dishes.id', ondelete='SET NULL'), nullable=True)
     count = db.Column(db.Integer)
     dish = db.relationship('Dish')
@@ -41,7 +41,7 @@ class User(db.Model):
     language = db.Column(db.String(5))
     token = db.Column(db.String(50))
     confirmed = db.Column(db.Boolean)
-    telegram_id = db.Column(db.Integer)
+    telegram_id = db.Column(BIGINT)
     registration_date = db.Column(db.DateTime)
     cart = db.relationship('CartItem', lazy='dynamic', backref='user', cascade='all, delete-orphan')
     orders = db.relationship('Order', lazy='dynamic', backref='customer', cascade='all, delete-orphan')
