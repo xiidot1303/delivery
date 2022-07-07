@@ -13,23 +13,28 @@ def request_registration_phone_number_handler(message: Message, **kwargs):
     language = kwargs.get('language')
 
     def error():
+        print('error')
         error_msg = strings.get_string('registration.request.phone_number', language)
         telegram_bot.send_message(chat_id, error_msg, parse_mode='HTML')
         telegram_bot.register_next_step_handler_by_chat_id(chat_id, request_registration_phone_number_handler, name=name, language=language)
 
     if message.contact is not None:
         phone_number = message.contact.phone_number
+        print(phone_number)
     else:
         if message.text is None:
             error()
             return
         else:
+            print(message.text)
             match = re.match(r'\+*998\s*\d{2}\s*\d{3}\s*\d{2}\s*\d{2}', message.text)
             if match is None:
                 error()
                 return
             phone_number = match.group()
+            print('march.group', phone_number)
     userservice.register_user(user_id, message.from_user.username, name, phone_number, language)
+    print('user registred')
     success_message = strings.get_string("welcome.registration_successfully", language)
     botutils.to_main_menu(chat_id, language, success_message)
 
