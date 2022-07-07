@@ -33,6 +33,7 @@ def request_registration_phone_number_handler(message: Message, **kwargs):
                 return
             phone_number = match.group()
             print('march.group', phone_number)
+    print(user_id, message.from_user.username, name, phone_number, language)
     userservice.register_user(user_id, message.from_user.username, name, str(phone_number), language)
     print('user registred')
     success_message = strings.get_string("welcome.registration_successfully", language)
