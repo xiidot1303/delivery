@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from sqlalchemy_mptt.mixins import BaseNestedSets
 from datetime import datetime
-
+from sqlalchemy import BIGINT
 
 class CartItem(db.Model):
     """
@@ -34,7 +34,7 @@ class User(db.Model):
     Model for users in Telegram Bot
     """
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(BIGINT, primary_key=True)
     full_user_name = db.Column(db.String(100))
     username = db.Column(db.String(100))
     phone_number = db.Column(db.String(15))
