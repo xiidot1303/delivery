@@ -106,5 +106,6 @@
     "search.error": "Введите как минимум 2 буквы для поиска",
     "dish.by_meter": "Метр буйича",
     "dish.how_many_meters": "Нечи метр сотиб олмокчисиз?",
-    "dish.type_amount": "Qancha miqdorda sotib olmoqchisiz?"
+    "dish.type_amount": "Канча микдорда сотиб олмокчисиз?",
+    "delivery_is_agree_with": "Етказиб бериш, транспорт харажатлари оператор билан келишилади"
 }

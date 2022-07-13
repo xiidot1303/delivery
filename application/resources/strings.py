@@ -170,6 +170,11 @@ def from_order(order: Order, language: str, total: int, total_dollar: int) -> st
         order_content += '<i>{}</i>: {} {}'.format(get_string('delivery_price', language),
                                                    _format_number(order.delivery_price),
                                                    get_string('sum', language))
+    else:
+        order_content += '\n\n'
+        order_content += '<i>{}</i>'.format(get_string('delivery_is_agree_with', language))
+
+
 
     return order_content
 
