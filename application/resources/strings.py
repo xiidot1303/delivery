@@ -162,7 +162,7 @@ def from_order_notification(order: Order, total_sum):
         order_content += '<b>Адрес:</b> {}\n'.format(order.address_txt)
     elif order.location:
         order_content += '<b>Адрес:</b> {}\n'.format(order.location.address)
-        #order_content += '<b>Дистанция: </b> {}\n'.format(order.distance)
+        order_content += '<b>Дистанция: </b> {}\n'.format(order.distance)
     order_content += '\n\n\U0001F6D2 Корзина:\n'
     order_item_tmpl = '<b>{counter}. {name}</b>\n    {count} x {price} = {sum} сум\n'
     order_items = order.order_items.all()
