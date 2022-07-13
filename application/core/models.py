@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from sqlalchemy_mptt.mixins import BaseNestedSets
 from datetime import datetime
-
+from sqlalchemy import BIGINT
 
 class CartItem(db.Model):
     """
@@ -11,7 +11,7 @@ class CartItem(db.Model):
     """
     __tablename__ = 'cart_items'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(BIGINT, db.ForeignKey('users.id'))
     dish_id = db.Column(db.Integer, db.ForeignKey('dishes.id', ondelete='SET NULL'), nullable=True)
     count = db.Column(db.Integer)
     dish = db.relationship('Dish')
@@ -34,14 +34,14 @@ class User(db.Model):
     Model for users in Telegram Bot
     """
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(BIGINT, primary_key=True)
     full_user_name = db.Column(db.String(100))
     username = db.Column(db.String(100))
     phone_number = db.Column(db.String(15))
     language = db.Column(db.String(5))
     token = db.Column(db.String(50))
     confirmed = db.Column(db.Boolean)
-    telegram_id = db.Column(db.Integer)
+    telegram_id = db.Column(BIGINT)
     registration_date = db.Column(db.DateTime)
     cart = db.relationship('CartItem', lazy='dynamic', backref='user', cascade='all, delete-orphan')
     orders = db.relationship('Order', lazy='dynamic', backref='customer', cascade='all, delete-orphan')
@@ -151,7 +151,7 @@ class Dish(db.Model):
     price = db.Column(db.Float)
     number = db.Column(db.Integer, default=1)
     category_id = db.Column(db.Integer, db.ForeignKey('dish_categories.id'))
-    measure = db.Column(db.String(100), default='штук')
+    measure = db.Column(db.String(100), default='p')
 
     def get_full_name(self):
         return self.category.get_nested_names() + ' |=>| ' + self.name
@@ -167,7 +167,7 @@ class Order(db.Model):
     """
     __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(BIGINT, db.ForeignKey('users.id'))
     user_name = db.Column(db.String(100))
     shipping_method = db.Column(db.String(50))
     payment_method = db.Column(db.String(50))
@@ -228,7 +228,7 @@ class Comment(db.Model):
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(100))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='SET NULL'))
+    user_id = db.Column(BIGINT, db.ForeignKey('users.id', ondelete='SET NULL'))
     username = db.Column(db.String(100))
 
 
@@ -236,7 +236,7 @@ class UserDish(db.Model):
     """
     Model for saving current dish of user
     """
-    user_id = db.Column(db.Integer, index=True, primary_key=True)
+    user_id = db.Column(BIGINT, index=True, primary_key=True)
     dish_id = db.Column(db.Integer, index=True)
 
 
@@ -250,7 +250,7 @@ class NotificationChat(db.Model):
 class RegistrationRequest(db.Model):
     __tablename__ = "registration_requests"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(BIGINT)
     phone_number = db.Column(db.String(20))
     tg_username = db.Column(db.String(100))
     username = db.Column(db.String(100))
