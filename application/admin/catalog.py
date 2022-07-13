@@ -140,7 +140,7 @@ def dish(dish_id: int):
         measure = form.measure.data
         dishservice.update_dish(dish_id, name_ru, name_uz, description_ru, description_uz, image, price,
                                 category_id, show_usd, measure)
-        flash('Блюдо {} изменено'.format(name_ru, category='success'))
+        flash('Продукт {} изменено'.format(name_ru, category='success'))
         return redirect(url_for('admin.catalog'))
     dish = dishservice.get_dish_by_id(dish_id)
     form.fill_from_object(dish)

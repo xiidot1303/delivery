@@ -34,7 +34,7 @@ def from_contacts(contacts: tuple, language: str) -> str:
     return "Вы можете обратиться к нам за помощью по следующим контактам:\n\nНаписать в телеграм: {}\nНомер телефона: {}".format(contacts[0], contacts[1])
 
 
-def from_cart_items(cart_items, language, total) -> str:
+def from_cart_items(cart_items, language, total, total_dollar) -> str:
     cart_contains = ''
     cart_contains += '<b>{}</b>:'.format(get_string('catalog.cart', language))
     cart_contains += '\n\n'
@@ -55,11 +55,15 @@ def from_cart_items(cart_items, language, total) -> str:
                                              count=cart_item.count,
                                              price=_format_number(cart_item.dish.price * currency_value),
                                              sum=_format_number(cart_item.count * cart_item.dish.price * currency_value))
-        dish_item += " {}\n\n".format(get_string('sum', language))
+        if cart_item.dish.show_usd:
+            dish_item += " $\n\n"
+        else:
+            dish_item += " {}\n\n".format(get_string('sum', language))
         cart_contains += dish_item
     cart_contains += "\n<b>{}</b> {} {}".format(get_string('cart.summary', language),
                                                  _format_number(total * currency_value),
                                                  get_string('sum', language))
+    cart_contains += "\n            {} $".format(_format_number(total_dollar * currency_value))
 
     return cart_contains
 
@@ -101,7 +105,7 @@ def from_order_payment_method(value: str, language: str) -> str:
     return get_string('order.' + value, language)
 
 
-def from_order(order: Order, language: str, total: int) -> str:
+def from_order(order: Order, language: str, total: int, total_dollar: int) -> str:
     currency_value = settings.get_currency_value()
     order_content = "<b>{}:</b>".format(get_string('your_order', language))
     order_content += '\n\n'
@@ -133,12 +137,17 @@ def from_order(order: Order, language: str, total: int) -> str:
             dish_name = dish.name_uz
         else:
             dish_name = dish.name
+        if dish.show_usd:
+            price_currency = 'usd'
+        else:
+            price_currency = 'sum'
+
         order_item_str = order_item_tmpl.format(counter=counter,
                                                 name=dish_name,
                                                 count=order_item.count,
                                                 price=_format_number(dish.price * currency_value),
                                                 sum=_format_number(order_item.count * dish.price * currency_value),
-                                                sum_str=get_string('sum', language))
+                                                sum_str=get_string(price_currency, language))
         order_content += order_item_str + '\n'
 
     if order.delivery_price:
@@ -149,6 +158,10 @@ def from_order(order: Order, language: str, total: int) -> str:
         order_content += "<b>{}</b> {} {}".format(get_string('cart.summary', language),
                                                   _format_number(total * currency_value),
                                                   get_string('sum', language))
+                                                  
+    order_content += "\n            {} {}".format(_format_number(total_dollar * currency_value),
+                                              get_string('usd', language))
+
     if not order.delivery_price and order.address_txt:
         order_content += '\n\n'
         order_content += '<i>{}</i>'.format(get_string('delivery_price_without_location', language))
@@ -171,9 +184,9 @@ def from_order_notification(order: Order, total_sum):
         order_content += '<b>Адрес:</b> {}\n'.format(order.address_txt)
     elif order.location:
         order_content += '<b>Адрес:</b> {}\n'.format(order.location.address)
-        #order_content += '<b>Дистанция: </b> {}\n'.format(order.distance)
+        order_content += '<b>Дистанция: </b> {}\n'.format(order.distance)
     order_content += '\n\n\U0001F6D2 Корзина:\n'
-    order_item_tmpl = '<b>{counter}. {name}</b>\n    {count} x {price} = {sum} сум\n'
+    order_item_tmpl = '<b>{counter}. {name}</b>\n    {count} x {price} = {sum} {currency}\n'
     order_items = order.order_items.all()
     grouped_order_items = {}
     categories_list = [oi.dish.category for oi in order_items]
@@ -185,13 +198,20 @@ def from_order_notification(order: Order, total_sum):
     for oi in order_items:
         counter += 1
         group_content = '\n'
+        if oi.dish.show_usd:
+            currency = '$'
+        else:
+            currency = 'сум'
         group_content += order_item_tmpl.format(counter=counter,
                                                 name=oi.dish.name,
                                                 count=oi.count,
                                                 price=_format_number(oi.dish.price),
-                                                sum=_format_number(oi.dish.price * oi.count))
+                                                sum=_format_number(oi.dish.price * oi.count),
+                                                currency=currency
+                                                )
         order_content += group_content
     order_content += "\n<b>Итого: </b>: {} сум".format(_format_number(order.total_amount))
+    order_content += "\n            {} $".format(_format_number(order.total_amount_dollar))
     if order.delivery_price:
         order_content += '\n\n'
         order_content += '<b>Стоимость доставки</b>: {} сум'.format(_format_number(order.delivery_price))

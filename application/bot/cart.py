@@ -7,8 +7,20 @@ from .orders import order_processor
 
 
 def _total_cart_sum(cart) -> int:
-    summary_dishes_sum = [cart_item.dish.price * cart_item.count
-                          for cart_item in cart]
+    summary_dishes_sum = []
+    for cart_item in cart:
+        # only dishes in summ
+        if not cart_item.dish.show_usd:
+            summary_dishes_sum.append(cart_item.dish.price * cart_item.count)
+    total = sum(summary_dishes_sum)
+    return total
+
+def _total_cart_sum_dollar(cart) -> int:
+    summary_dishes_sum = []
+    for cart_item in cart:
+        # only dishes in dollar
+        if cart_item.dish.show_usd:
+            summary_dishes_sum.append(cart_item.dish.price * cart_item.count)
     total = sum(summary_dishes_sum)
     return total
 
@@ -42,7 +54,8 @@ def cart_action_processor(message: Message):
                 back_to_the_catalog(chat_id, language)
                 return
             total = _total_cart_sum(cart)
-            cart_contains_message = strings.from_cart_items(cart, language, total)
+            total_dollar = _total_cart_sum_dollar(cart)
+            cart_contains_message = strings.from_cart_items(cart, language, total, total_dollar)
             cart_contains_keyboard = keyboards.from_cart_items(cart, language)
             bot.send_message(chat_id, cart_contains_message, parse_mode='HTML', reply_markup=cart_contains_keyboard)
             bot.register_next_step_handler_by_chat_id(chat_id, cart_action_processor)
@@ -68,7 +81,8 @@ def cart_processor(message: Message, callback=None):
         return
     cart_help_message = strings.get_string('cart.help', language)
     total = _total_cart_sum(cart)
-    cart_contains_message = strings.from_cart_items(cart, language, total)
+    total_dollar = _total_cart_sum_dollar(cart)
+    cart_contains_message = strings.from_cart_items(cart, language, total, total_dollar)
     cart_items_keyboard = keyboards.from_cart_items(cart, language)
     bot.send_message(chat_id, cart_help_message, parse_mode='HTML')
     bot.send_message(chat_id, cart_contains_message, parse_mode='HTML', reply_markup=cart_items_keyboard)

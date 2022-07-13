@@ -7,7 +7,19 @@ from application.utils import date
 
 
 def _total_order_sum(order_items) -> int:
-    summary_dishes_sum = [order_item.count * order_item.dish.price for order_item in order_items]
+    summary_dishes_sum = []
+    for order_item in order_items:
+        if not order_item.dish.show_usd:
+            summary_dishes_sum.append(order_item.count * order_item.dish.price)
+    total = sum(summary_dishes_sum)
+    return total
+
+
+def _total_order_sum_dollar(order_items) -> int:
+    summary_dishes_sum = []
+    for order_item in order_items:
+        if order_item.dish.show_usd:
+            summary_dishes_sum.append(order_item.count * order_item.dish.price)
     total = sum(summary_dishes_sum)
     return total
 
@@ -34,5 +46,6 @@ def order(order_id: int):
     current_order = orderservice.get_order_by_id(order_id)
     order_date = date.convert_utc_to_asia_tz(current_order.confirmation_date).strftime('%d.%m.%Y %H:%M:%S')
     total_sum = _total_order_sum(current_order.order_items.all())
+    total_sum_dollar = _total_order_sum_dollar(current_order.order_items.all())
     return render_template('admin/order.html', title="Заказ от {}".format(order_date),
-                           area='orders', order=current_order, total_sum=total_sum)
+                           area='orders', order=current_order, total_sum=total_sum, total_sum_dollar=total_sum_dollar)

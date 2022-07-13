@@ -26,14 +26,38 @@ def pre_checkout_order_query_handler(query: PreCheckoutQuery):
 
 
 def _total_order_sum(order_items) -> int:
-    summary_dishes_sum = [order_item.count * order_item.dish.price for order_item in order_items]
+    summary_dishes_sum = []
+    for order_item in order_items:
+        if not order_item.dish.show_usd:
+            summary_dishes_sum.append(order_item.count * order_item.dish.price)
+    total = sum(summary_dishes_sum)
+    return total
+
+def _total_order_sum_dollar(order_items) -> int:
+    summary_dishes_sum = []
+    for order_item in order_items:
+        if order_item.dish.show_usd:
+            summary_dishes_sum.append(order_item.count * order_item.dish.price)
     total = sum(summary_dishes_sum)
     return total
 
 
+
 def _total_cart_sum(cart) -> int:
-    summary_dishes_sum = [cart_item.dish.price * cart_item.count
-                          for cart_item in cart]
+    summary_dishes_sum = []
+    for cart_item in cart:
+        # only dishes in summ
+        if not cart_item.dish.show_usd:
+            summary_dishes_sum.append(cart_item.dish.price * cart_item.count)
+    total = sum(summary_dishes_sum)
+    return total
+
+def _total_cart_sum_dollar(cart) -> int:
+    summary_dishes_sum = []
+    for cart_item in cart:
+        # only dishes in dollar
+        if cart_item.dish.show_usd:
+            summary_dishes_sum.append(cart_item.dish.price * cart_item.count)
     total = sum(summary_dishes_sum)
     return total
 
@@ -60,7 +84,8 @@ def _to_the_payment_method(chat_id, language, user_id: int):
 def _to_the_address(chat_id, language):
     cart = userservice.get_user_cart(chat_id)
     total = _total_cart_sum(cart)
-    cart_contains_message = strings.from_cart_items(cart, language, total)
+    total_dollar = _total_cart_sum_dollar(cart)
+    cart_contains_message = strings.from_cart_items(cart, language, total, total_dollar)
     address_message = strings.get_string('order.address', language).format(cart_contains_message)
     address_keyboard = keyboards.get_keyboard('order.address', language)
     bot.send_message(chat_id, address_message, parse_mode='HTML', reply_markup=address_keyboard)
@@ -76,7 +101,8 @@ def _to_the_phone_number(chat_id, language, user):
 
 def _to_the_confirmation(chat_id, current_order, language):
     total = _total_order_sum(current_order.order_items.all())
-    summary_order_message = strings.from_order(current_order, language, total)
+    total_dollar = _total_order_sum_dollar(current_order.order_items.all())
+    summary_order_message = strings.from_order(current_order, language, total, total_dollar)
     confirmation_keyboard = keyboards.get_keyboard('order.confirmation', language)
     if current_order.payment_method == Order.PaymentMethods.PAYME:
         title = strings.get_string('order.payment.title', language).format(current_order.id)
@@ -89,7 +115,7 @@ def _to_the_confirmation(chat_id, current_order, language):
         bot.send_message(chat_id, summary_order_message, parse_mode='HTML', reply_markup=confirmation_keyboard)
         invoice = bot.send_invoice(chat_id, title, description, payload, Config.PAYMENT_PROVIDER_TOKEN, currency, prices,
                          start_parameter)
-        bot.register_next_step_handler_by_chat_id(chat_id, confirmation_processor, total=total, message_id=invoice.message_id)
+        bot.register_next_step_handler_by_chat_id(chat_id, confirmation_processor, total=total, total_dollar=total_dollar, message_id=invoice.message_id)
         return
     elif current_order.payment_method == Order.PaymentMethods.CLICK:
         title = strings.get_string('order.payment.title', language).format(current_order.id)
@@ -102,11 +128,11 @@ def _to_the_confirmation(chat_id, current_order, language):
         bot.send_message(chat_id, summary_order_message, parse_mode='HTML', reply_markup=confirmation_keyboard)
         invoice = bot.send_invoice(chat_id, title, description, payload, Config.PAYMENT_PROVIDER_TOKEN_CLICK, currency, prices,
                          start_parameter)
-        bot.register_next_step_handler_by_chat_id(chat_id, confirmation_processor, total=total, message_id=invoice.message_id)
+        bot.register_next_step_handler_by_chat_id(chat_id, confirmation_processor, total=total, total_dollar=total_dollar, message_id=invoice.message_id)
         return
     else:
         bot.send_message(chat_id, summary_order_message, parse_mode='HTML', reply_markup=confirmation_keyboard)
-    bot.register_next_step_handler_by_chat_id(chat_id, confirmation_processor, total=total)
+    bot.register_next_step_handler_by_chat_id(chat_id, confirmation_processor, total=total, total_dollar=total_dollar)
 
 
 def order_processor(message: Message):
@@ -262,8 +288,9 @@ def confirmation_processor(message: Message, **kwargs):
         return
     if strings.get_string('order.confirm', language) in message.text:
         total = kwargs.get('total')
+        total_dollar = kwargs.get('total_dollar')
         user = userservice.get_user_by_telegram_id(user_id)
-        order = orderservice.confirm_order(user_id, user.full_user_name, total)
+        order = orderservice.confirm_order(user_id, user.full_user_name, total, total_dollar)
         order_success_message = strings.get_string('order.success', language)
         back_to_the_catalog(chat_id, language, order_success_message)
         notify_new_order(order, total)

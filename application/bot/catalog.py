@@ -85,9 +85,22 @@ def dish_action_processor(message: Message, **kwargs): # choosing amount of prod
     
     elif message.text.isdigit():
         # get count of products
+
         def _total_cart_sum(cart) -> int:
-            summary_dishes_sum = [cart_item.dish.price * cart_item.count
-                                  for cart_item in cart]
+            summary_dishes_sum = []
+            for cart_item in cart:
+                # only dishes in summ
+                if not cart_item.dish.show_usd:
+                    summary_dishes_sum.append(cart_item.dish.price * cart_item.count)
+            total = sum(summary_dishes_sum)
+            return total
+
+        def _total_cart_sum_dollar(cart) -> int:
+            summary_dishes_sum = []
+            for cart_item in cart:
+                # only dishes in dollar
+                if cart_item.dish.show_usd:
+                    summary_dishes_sum.append(cart_item.dish.price * cart_item.count)
             total = sum(summary_dishes_sum)
             return total
 
@@ -98,8 +111,9 @@ def dish_action_processor(message: Message, **kwargs): # choosing amount of prod
         userservice.add_dish_to_cart(user_id, current_dish, selected_number)
         cart = userservice.get_user_cart(user_id)
         total = _total_cart_sum(cart)
+        total_dollar = _total_cart_sum_dollar(cart)
         # bot.delete_message(chat_id, call.message.message_id)
-        cart_contains_message = strings.from_cart_items(cart, language, total)
+        cart_contains_message = strings.from_cart_items(cart, language, total, total_dollar)
         continue_message = strings.get_string('catalog.continue', language).format(cart_contains_message)
         back_to_the_catalog(chat_id, language, continue_message)
         catalog_message = strings.get_string('catalog.start', language)

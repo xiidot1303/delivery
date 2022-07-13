@@ -158,7 +158,7 @@ def set_phone_number(user_id: int, phone_number: str) -> Order:
     return current_order
 
 
-def confirm_order(user_id: int, user_name, total_amount: float):
+def confirm_order(user_id: int, user_name, total_amount: float, total_amount_dollar: float):
     """
     Confirm order and let him show on admin panel
     :param user_id: User's Telegram-ID
@@ -169,27 +169,12 @@ def confirm_order(user_id: int, user_name, total_amount: float):
     current_order.confirmation_date = datetime.utcnow()
     current_order.user_name = user_name
     if current_order.delivery_price:
-        current_order.total_amount = current_order.delivery_price + total_amount 
+        current_order.total_amount = current_order.delivery_price + total_amount
     else:
         current_order.total_amount = total_amount 
+    current_order.total_amount_dollar = total_amount_dollar 
     userservice.clear_user_cart(user_id)
     db.session.commit()
-    
-    msg = """user_name: {}\nshipping_method: {}\npayment_method: {}\naddress: {}\nlocation: {}\nphone_number: {}\nconfirmed: {}\ndelivery_price: {}\ntotal_amount: {}\ndistance: {}\n\n""".format(
-            current_order.user_name, current_order.shipping_method, current_order.payment_method, current_order.address_txt, current_order.location.address,
-            current_order.phone_number, current_order.confirmed, current_order.delivery_price, current_order.total_amount, current_order.distance
-        )
-    msg += 'Содержимое заказа:\n'
-    n = 1
-    for order in current_order.order_items.all():
-        msg += '{})\nНазвание: {}\nКоличество: {}\nЦена: {}'.format(n, order.dish.name, order.count, order.dish.price * order.count)
-        msg += '\n\n'
-        n += 1
-    # try:
-
-    telegram_bot.send_message(chat_id=int(Config.GROUP), text=msg)
-    # except:
-    #     n = 0
     return current_order
 
 

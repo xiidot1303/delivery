@@ -177,6 +177,7 @@ class Order(db.Model):
     confirmation_date = db.Column(db.DateTime)
     delivery_price = db.Column(db.Integer)
     total_amount = db.Column(db.Float)
+    total_amount_dollar = db.Column(db.Float)
     order_items = db.relationship('OrderItem', lazy='dynamic',
                                   backref='order', cascade='all, delete-orphan')
     location = db.relationship('Location', uselist=False, cascade='all,delete', backref='order')
