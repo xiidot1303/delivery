@@ -186,13 +186,13 @@ def confirm_order(user_id: int, user_name, total_amount: float):
         msg += '\n\n'
         n += 1
     msg += 'Manzil 👇👇👇'
-    try:
+    # try:
 
-        telegram_bot.send_message(chat_id=int(Config.GROUP), text=msg)
-        telegram_bot.send_location(chat_id=int(Config.GROUP), latitude=current_order.location.latitude, longitude=current_order.location.longitude)
+    #     telegram_bot.send_message(chat_id=int(Config.GROUP), text=msg)
+    #     telegram_bot.send_location(chat_id=int(Config.GROUP), latitude=current_order.location.latitude, longitude=current_order.location.longitude)
 
-    except:
-        n = 0
+    # except:
+    #     n = 0
     return current_order
 
 
