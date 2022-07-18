@@ -7,7 +7,7 @@ from application.core import exceptions
 from application.core.models import Dish, DishCategory
 from . import userservice
 from datetime import datetime
-
+import pytz
 
 def check_catalog(message: Message):
     
@@ -222,7 +222,11 @@ def catalog(message: Message):
     user_id = message.from_user.id
     language = userservice.get_user_language(user_id)
     bot.send_chat_action(chat_id, 'typing')
-    hour = datetime.now().hour
+    
+    # check time
+    utc = pytz.utc
+    ist = pytz.timezone('Asia/Tashkent')
+    hour = datetime.now(ist).hour
     if hour < 9 or hour > 22:
         bot.send_message(chat_id, strings.get_string('closed', language))
         return

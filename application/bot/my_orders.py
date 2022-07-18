@@ -5,6 +5,7 @@ from application.utils import bot as botutils
 from telebot.types import Message
 from . import cart as user_cart
 from datetime import datetime
+import pytz
 
 def check_my_orders(message: Message):
     if not message.text:
@@ -23,7 +24,11 @@ def my_orders(message: Message):
     chat_id = message.chat.id
     user_id = message.from_user.id
     language = userservice.get_user_language(user_id)
-    hour = datetime.now().hour
+    
+    # check time
+    utc = pytz.utc
+    ist = pytz.timezone('Asia/Tashkent')
+    hour = datetime.now(ist).hour
     if hour < 9 or hour > 22:
         bot.send_message(chat_id, strings.get_string('closed', language))
         return
