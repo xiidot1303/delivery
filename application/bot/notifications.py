@@ -42,7 +42,7 @@ def notify_new_order(order: Order, total_sum: float):
     notification_chats = notifyservice.get_all_notification_chats()
     notification_message = strings.from_order_notification(order, total_sum)
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton(strings.get_string('notifications.accept'), callback_data='order:' + str(order.id)))
+    markup.add(InlineKeyboardButton('Buyurtmani qabul qilish', callback_data='order:' + str(order.id)))
     for chat in notification_chats:
         try:
             telegram_bot.send_message(chat.chat_id, notification_message, reply_markup=markup, parse_mode='HTML')

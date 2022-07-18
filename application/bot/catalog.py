@@ -6,9 +6,11 @@ from telebot.types import Message
 from application.core import exceptions
 from application.core.models import Dish, DishCategory
 from . import userservice
+from datetime import datetime
 
 
 def check_catalog(message: Message):
+    
     if not message.text:
         return False
     user_id = message.from_user.id
@@ -220,6 +222,10 @@ def catalog(message: Message):
     user_id = message.from_user.id
     language = userservice.get_user_language(user_id)
     bot.send_chat_action(chat_id, 'typing')
+    hour = datetime.now().hour
+    if hour < 9 or hour > 22:
+        bot.send_message(chat_id, strings.get_string('closed', language))
+        return
     catalog_message = strings.get_string('catalog.start', language)
     categories = dishservice.get_parent_categories(sort_by_number=True)
     if len(categories) == 0:
