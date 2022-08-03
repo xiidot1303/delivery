@@ -9,7 +9,7 @@ filename = os.path.join(basedir, 'settings')
 def get_delivery_cost() -> tuple:
     """
     Get delivery cost
-    :return: (First 3 km, and longer)
+    :return: (First 1 km, and longer)
     """
     settings = shelve.open(filename)
     if 'delivery_cost' not in settings:
@@ -22,7 +22,7 @@ def get_delivery_cost() -> tuple:
 def set_delivery_cost(prices: tuple):
     """
     Set delivary prices
-    :param prices: (First 3 km, and longer)
+    :param prices: (First 1 km, and longer)
     :return: void
     """
     settings = shelve.open(filename)

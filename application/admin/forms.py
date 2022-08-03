@@ -82,8 +82,8 @@ class AdministratorPasswordForm(FlaskForm):
 
 
 class DeliveryPriceForm(FlaskForm):
-    first_3_km = StringField('Стоимость за первые три киллометра',
-                             validators=[DataRequired('Укажите стоимость первых трёх километров')])
+    first_3_km = StringField('Стоимость за первые киллометра',
+                             validators=[DataRequired('Укажите стоимость первых километров')])
     others_km = StringField('Стоимость за остальной путь',
                             validators=[DataRequired('Укажите стоимость за остальные километры')])
     limit_km = StringField('Лимит доставки (км)',
