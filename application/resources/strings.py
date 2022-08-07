@@ -158,6 +158,8 @@ def from_order_notification(order: Order, total_sum):
     order_content += '<b>Номер телефона:</b> {}\n'.format(order.phone_number)
     order_content += '<b>Имя покупателя:</b> {}\n'.format(order.user_name)
     order_content += '<b>Способ оплаты:</b> {}\n'.format(from_order_payment_method(order.payment_method, 'ru'))
+    order_content += '<b>Способ доставки:</b> {}\n'.format(from_order_shipping_method(order.shipping_method, 'ru'))
+
     if order.address_txt:
         order_content += '<b>Адрес:</b> {}\n'.format(order.address_txt)
     elif order.location:
