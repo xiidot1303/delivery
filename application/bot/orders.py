@@ -119,7 +119,7 @@ def order_processor(message: Message):
         cart_empty_message = strings.get_string('cart.empty', language)
         back_to_the_catalog(chat_id, language, cart_empty_message)
         return
-    _to_the_address(chat_id, language)
+    _to_the_shipping_method(chat_id, language)
 
 
 def shipping_method_processor(message: Message):
