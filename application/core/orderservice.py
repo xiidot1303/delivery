@@ -174,25 +174,6 @@ def confirm_order(user_id: int, user_name, total_amount: float):
         current_order.total_amount = total_amount 
     userservice.clear_user_cart(user_id)
     db.session.commit()
-    
-    msg = """Mijoz: {}\nManzil: {}\nTelefon: {}\nYetkazib berish narxi: {}\nUmimiy narx: {}\nMasofa: {}\n\n""".format(
-            current_order.user_name, current_order.location.address,
-            current_order.phone_number, current_order.delivery_price, current_order.total_amount, current_order.distance
-        )
-    msg += 'Buyurtma tarkibi:\n'
-    n = 1
-    for order in current_order.order_items.all():
-        msg += '{})\nNom: {}\nMiqdor: {}\nNarx: {}'.format(n, order.dish.name, order.count, order.dish.price * order.count)
-        msg += '\n\n'
-        n += 1
-    msg += 'Manzil 👇👇👇'
-    # try:
-
-    #     telegram_bot.send_message(chat_id=int(Config.GROUP), text=msg)
-    #     telegram_bot.send_location(chat_id=int(Config.GROUP), latitude=current_order.location.latitude, longitude=current_order.location.longitude)
-
-    # except:
-    #     n = 0
     return current_order
 
 
