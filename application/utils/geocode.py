@@ -1,6 +1,7 @@
 from math import radians, cos, sin, asin, sqrt
 from yandex_geocoder import Client
 from typing import Optional, AnyStr
+from geopy.geocoders import Nominatim
 
 
 def distance_between_two_points(first_coordinates: tuple, second_coordinates: tuple) -> tuple:
@@ -32,9 +33,9 @@ def get_address_by_coordinates(coordinates: tuple) -> Optional[AnyStr]:
     :param coordinates: Coordinates (latitude, longitude)
     :return: string value
     """
-    client = Client('4d16304f-12ba-4134-ac9b-f0da5028a1f4')
     latitude = coordinates[0]
     longitude = coordinates[1]
-    location = client.address(longitude, latitude)
-    return location
+    geolocator = Nominatim(user_agent="marhabobot_geocoder")
+    location = geolocator.reverse((latitude, longitude), language="en")
+    return location.address
 
